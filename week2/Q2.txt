@@ -1,0 +1,52 @@
+from course, takes where takes.ID='12345' and takes.course_ID=course.CourseID 
+select course.coursre_ID, course_title
+
+
+
+select name, dept_name from student;
+NAME                 DEPT_NAME
+-------------------- --------------------
+Zhang                Comp. Sci.
+Shankar              Comp. Sci.
+Tanaka               Biology
+
+select name from instructor where dept_name='Comp. Sci.';
+NAME
+--------------------
+Srinivasan
+Katz
+Brandt
+
+select title from course where dept_name='Comp. Sci.' and credits=3;
+TITLE
+--------------------------------------------------
+Robotics
+Image Processing
+Database System Concepts
+
+select course.course_id, course.title from course, takes where takes.id='12345' and takes.course_id=course.course_id;
+COURSE_I TITLE
+-------- --------------------------------------------------
+CS-101   Intro. to Computer Science
+CS-190   Game Design
+CS-315   Robotics
+CS-347   Database System Concepts
+
+select * from instructor where salary>=40000 and salary<=90000;
+
+SQL> select * from instructor where salary>=40000 and salary<=90000;
+
+ID    NAME                 DEPT_NAME                SALARY
+----- -------------------- -------------------- ----------
+10101 Srinivasan           Comp. Sci.                65000
+12121 Wu                   Finance                   90000
+15151 Mozart               Music                     40000
+32343 El Said              History                   60000
+33456 Gold                 Physics                   87000
+45565 Katz                 Comp. Sci.                75000
+58583 Califieri            History                   62000
+76543 Singh                Finance                   80000
+76766 Crick                Biology                   72000
+98345 Kim                  Elec. Eng.                80000
+
+10 rows selected.

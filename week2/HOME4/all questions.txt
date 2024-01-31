@@ -1,0 +1,166 @@
+Student (ID, name,dept_name, tot_cred)
+Instructor(ID, name, dept_name, salary)
+Course (Course_id, title,dept_name, credits)
+Takes (ID, course_id, sec_id, semester, year, grade)
+Classroom (building, room_number, capacity)
+Department (dept_name, building, budget)
+Section (course_id, section_id, semester, year, building, room_number, time_slot_id)
+Teaches (id, course_id, section_id, semester, year)
+Advisor(s_id, i_id)
+Time-slot (time_slot_id, day, start_time, end_time)
+Prereq (course_id, prereq_id)
+
+
+//Q9. List all Students with names and their department names.
+select ID, name, dept_name
+from student s;
+
+ID    NAME                 DEPT_NAME
+----- -------------------- --------------------
+00128 Zhang                Comp. Sci.
+12345 Shankar              Comp. Sci.
+19991 Brandt               History
+23121 Chavez               Finance
+44553 Peltier              Physics
+45678 Levy                 Physics
+54321 Williams             Comp. Sci.
+55739 Sanchez              Music
+70557 Snow                 Physics
+76543 Brown                Comp. Sci.
+76653 Aoi                  Elec. Eng.
+
+ID    NAME                 DEPT_NAME
+----- -------------------- --------------------
+98765 Bourikas             Elec. Eng.
+98988 Tanaka               Biology
+
+13 rows selected.
+
+
+//Q10. List all instructors in CSE department.
+
+select i.name 
+from instructor i
+where i.dept_name='Comp. Sci.';
+
+NAME
+--------------------
+Srinivasan
+Katz
+Brandt
+
+//Q11. Find the names of courses in CSE department which have 3 credits.
+select c.course_id, c.title 
+from course c
+where c.dept_name='Comp. Sci.' and c.credits=3;
+
+COURSE_I TITLE
+-------- --------------------------------------------------
+CS-315   Robotics
+CS-319   Image Processing
+CS-347   Database System Concepts
+
+
+//Q12. For the student with ID 12345 (or any other value), show all course-id and title of all courses registered for by the student.
+
+select s.id, s.name, c.course_id, c.title
+from student s, course c,takes t
+where s.Id=12345 and t.id=s.id and c.course_id=t.course_id;
+
+ID    NAME                 COURSE_I TITLE
+----- -------------------- -------- --------------------------------------------------
+12345 Shankar              CS-101   Intro. to Computer Science
+12345 Shankar              CS-190   Game Design
+12345 Shankar              CS-315   Robotics
+12345 Shankar              CS-347   Database System Concepts
+
+
+
+//Q13. List all the instructors whose salary is in between 40000 and 90000.
+	select i.name, i.salary
+	from instructor i
+	where i.salary>40000 and i.salary<90000;
+
+NAME                     SALARY
+-------------------- ----------
+Srinivasan                65000
+El Said                   60000
+Gold                      87000
+Katz                      75000
+Califieri                 62000
+Singh                     80000
+Crick                     72000
+Kim                       80000
+
+8 rows selected.
+
+
+
+//Q14. Display the IDs of all instructors who have never taught a course.
+	
+select i.ID,i.name
+from instructor i
+where i.ID NOT IN (select id
+		   from teaches);
+
+ID    NAME
+----- --------------------
+76543 Singh
+58583 Califieri
+33456 Gold
+
+
+//Q15. Find the student names, course names, and the year, for all students those who have 
+attended classes in room-number 303.
+
+select s.name,s.id, c.title,c.course_id,t.year
+from student s,course c,section sc,takes t
+where s.id=t.id and c.course_id=t.course_id and sc.sec_id=t.sec_id and  t.course_id=sc.course_id and sc.room_number=101;
+
+
+select *
+from student s,course c,section sc,takes t
+where s.id=t.id and sc.room_number=101 and t.course_id=c.course_id and sc.course_id=c.course_id and t.year=sc.year;
+
+
+//Q16. For all students who have opted courses in 2015, find their names and course id’s 
+with the attribute course title replaced by c-name.
+
+
+//Q17. Find the names of all instructors whose salary is greater than the salary of at least 
+one instructor of CSE department and salary replaced by inst-salary.
+String Operations (Use %, _, LIKE):
+
+
+//Q18. Find the names of all instructors whose department name includes the substring 
+‘ch’. 
+Built-in Functions:
+
+
+//Q19. List the student names along with the length of the student names.
+
+
+
+//Q20. List the department names and 3 characters from 3rd position of each department name
+
+
+
+//Q21. List the instructor names in upper case.
+
+
+//Q22. Replace NULL with value1(say 0) for a column in any of the table 
+
+
+//Q23. Display the salary and salary/3 rounded to nearest hundred from Instructor.
+Add date of birth column (DOB) to Employee Table. Insert appropriate DOB values 
+for different employees and try the exercise problems given below:
+
+
+//Q24. Display the birth date of all the employees in the following format:
+ ‘DD-MON-YYYY’
+ ‘DD-MON-YY’
+ ‘DD-MM-YY’
+25. List the employee names and the year (fully spelled out) in which they are born
+ ‘YEAR’
+ ‘Year’
+ ‘year’

@@ -1,0 +1,196 @@
+Student (ID, name,dept_name, tot_cred)
+Instructor(ID, name, dept_name, salary)
+Course (Course_id, title,dept_name, credits)
+Takes (ID, course_id, sec_id, semester, year, grade)
+Classroom (building, room_number, capacity)
+Department (dept_name, building, budget)
+Section (course_id, section_id, semester, year, building, room_number, time_slot_id)
+Teaches (id, course_id, section_id, semester, year)
+Advisor(s_id, i_id)
+Time-slot (time_slot_id, day, start_time, end_time)
+Prereq (course_id, prereq_id)
+
+
+//Q11. Find the number of students in each course.
+select count(id), c.title
+from takes t, course c
+where t.course_id=c.course_id
+group by t.course_id,c.title;
+
+
+ COUNT(ID) TITLE
+---------- --------------------------------------------------
+         1 Intro. to Biology
+         1 Genetics
+         7 Intro. to Computer Science
+         2 Game Design
+         2 Robotics
+         2 Image Processing
+         2 Database System Concepts
+         1 Intro. to Digital Systems
+         1 Investment Banking
+         1 World History
+         1 Music Video Production
+
+ COUNT(ID) TITLE
+---------- --------------------------------------------------
+         1 Physical Principles
+
+12 rows selected.
+
+
+
+select count(id), course_id
+from takes t
+group by t.course_id;
+
+ COUNT(ID) COURSE_I
+---------- --------
+         7 CS-101
+         2 CS-347
+         2 CS-190
+         2 CS-315
+         1 HIS-351
+         1 FIN-201
+         1 PHY-101
+         2 CS-319
+         1 MU-199
+         1 EE-181
+         1 BIO-101
+
+ COUNT(ID) COURSE_I
+---------- --------
+         1 BIO-301
+
+12 rows selected.
+
+
+//Q2  Find those departments where the average number of students are greater than 10.
+select dept_name,count(id)
+from student s
+group by dept_name 
+having count(id)>=2;
+
+DEPT_NAME             COUNT(ID)
+-------------------- ----------
+Comp. Sci.                    4
+Physics                       3
+Elec. Eng.                    2
+
+
+//Q3 . Find the total number of courses in each department
+
+select dept_name, count(course_id)
+from course
+group by dept_name;
+
+DEPT_NAME            COUNT(COURSE_ID)
+-------------------- ----------------
+Biology                             3
+Comp. Sci.                          5
+Elec. Eng.                          1
+Finance                             1
+History                             1
+Music                               1
+Physics                             1
+
+7 rows selected.
+
+//Q4Find the names and average salaries of all departments whose average salary is 
+greater than 42000
+
+select dept_name, avg(salary) as high_avg_Sal
+from instructor
+group by dept_name
+having avg(salary)>42000;
+
+DEPT_NAME            HIGH_AVG_SAL
+-------------------- ------------
+Comp. Sci.             77333.3333
+Finance                     85000
+Physics                     91000
+History                     61000
+Biology                     72000
+Elec. Eng.                  80000
+
+6 rows selected.
+
+[][][][][][][][nhi smajh ayaa
+//Q5Find the enrolment of each section that was offered in Spring 2009.
+
+select sec_id, count(sec_id)
+from section 
+where semester='Spring' and year='2009'
+group by sec_id;
+
+//Q6List all the courses with prerequisite courses, then display course id in increasing 
+order.
+
+select prereq_id,course_id
+from prereq
+order by course_id desc;
+
+PREREQ_I COURSE_I
+-------- --------
+PHY-101  EE-181
+CS-101   CS-347
+CS-101   CS-319
+CS-101   CS-315
+CS-101   CS-190
+BIO-101  BIO-399
+BIO-101  BIO-301
+
+7 rows selected.
+
+//Q7 Display the details of instructors sorting the salary in decreasing order. 
+
+select name, salary
+from instructor
+order by salary desc;    //asc
+
+NAME                     SALARY
+-------------------- ----------
+Einstein                  95000
+Brandt                    92000
+Wu                        90000
+Gold                      87000
+Kim                       80000
+Singh                     80000
+Katz                      75000
+Crick                     72000
+Srinivasan                65000
+Califieri                 62000
+El Said                   60000
+
+NAME                     SALARY
+-------------------- ----------
+Mozart                    40000
+
+12 rows selected.
+
+//Q8Find the maximum total salary across the departments.
+
+select dept_name, MAX(salary) as MAx_salary
+from instructor
+group by dept_name; 
+
+DEPT_NAME            MAX_SALARY
+-------------------- ----------
+Comp. Sci.                92000
+Finance                   90000
+Music                     40000
+Physics                   95000
+History                   62000
+Biology                   72000
+Elec. Eng.                80000
+
+7 rows selected.
+
+//Q9Find the average instructors’ salaries of those departments where the average 
+salary is greater than 42000.
+
+select dept_name,avg(salary) As Avg_salary
+from instructor
+group by dept_name 
+having avg(salary)>=42000;
+

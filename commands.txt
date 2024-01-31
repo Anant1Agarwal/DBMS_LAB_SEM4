@@ -1,0 +1,7 @@
+user system
+db123
+
+set linesize 200;
+ more chars means more columns;
+
+cl scr;

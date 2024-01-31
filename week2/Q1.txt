@@ -1,0 +1,91 @@
+create table Employee(EmpNo numeric(3) Primary key,
+			EmpName varchar(30) NOT NULL, 
+			Gender varchar(1) NOT NULL,
+			Salary numeric(10) NOT NULL,
+			Address varchar(30) NOT NULL ,
+			DNo numeric(4) NOT NULL);
+
+Alter table Employee 
+Modify Gender constraint gendercheck check(Gender in ('M', 'F'));
+
+
+
+create table Department(DeptNo numeric(4) Primary Key,
+			DeptName varchar(30) );
+
+
+alter table employee 
+add constraint fk_key foreign key(Dno) references Department(DeptNo);
+
+insert into Department values(783, 'Tech');
+insert into Department values(432, 'IT');
+insert into Department values(84, 'Security');
+
+
+insert into employee values(100, 'Anant Agarwal','M', 7777777,'Seattle', 783);
+insert into employee values(101, 'Robert','M', 27242,'Seattle', 432);
+insert into employee values(102, 'Rebecca','F', 77777,'Seattle', 84);
+insert into employee values(105, 'Utsav goyal','M',150,'Seattle', 783);]
+
+alter table department rename to newdepartment;
+
+
+//violation
+insert into employee values(100, 'nonu','M',120,'Seattle', 323);
+
+ERROR at line 1:
+ORA-02291: integrity constraint (A39.FK_KEY) violated - parent key not found
+
+insert into employee values(100, 'nonu','M',120,'Seattle', 323);
+
+ERROR at line 1:
+ORA-00001: unique constraint (A39.SYS_C00143618) violated
+
+insert into employee values(107, NULL,'M',120,'Seattle', 323);
+
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("A39"."EMPLOYEE"."EMPNAME")
+
+
+
+DELETE FROM newdepartment WHERE DeptNo=84;
+*
+ERROR at line 1:
+ORA-02292: integrity constraint (A39.FK_KEY) violated - child record found
+
+
+alter table employee
+drop constraint fk_key;
+
+alter table employee 
+add constraint fk_key foreign key(Dno) references newDepartment(DeptNo) on delete cascade;
+
+DELETE FROM newdepartment WHERE DeptNo=84;
+1 row deleted.
+
+SQL> select * from employee;
+
+     EMPNO EMPNAME                        G     SALARY ADDRESS                               DNO
+---------- ------------------------------ - ---------- ------------------------------ ----------
+       101 Robert                         M      27242 Seattle                               432
+       100 Anant Agarwal                  M    7777777 Seattle                               783
+       105 Utsav goyal                    M        150 Seattle                               783
+
+SQL> select * from employee;
+
+     EMPNO EMPNAME                        G     SALARY ADDRESS                               DNO
+---------- ------------------------------ - ---------- ------------------------------ ----------
+       101 Robert                         M      27242 Seattle                               432
+       100 Anant Agarwal                  M    7777777 Seattle                               783
+       105 Utsav goyal                    M        150 Seattle                               783
+
+alter table employee drop constraint salary;
+alter table employee add constraint salary_default salary numeric(8) default(1000) not null;
+
+
+
+
+
+
+
+
