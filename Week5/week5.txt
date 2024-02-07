@@ -1,0 +1,75 @@
+//Q1Retrieve the birth date and address of the employee(s) whose name is ‘John B. 
+Smith’.
+
+select bdate,minit, address
+from employee
+where fname='John'and minit='B'and lname='Smith';
+
+BDATE     M ADDRESS
+--------- - ------------------------------
+09-JAN-65 B 731 Fondren, Houston, TX
+
+
+//Q2 Retrieve the name and address of all employees who work for the 
+‘Research’ department. 
+select fname, address
+from(employee join department on DNO=DNUMBER and dname='Research' );
+
+FNAME           ADDRESS
+--------------- ------------------------------
+John            731 Fondren, Houston, TX
+Franklin        638 Voss, Houston, TX
+Ramesh          975 Fire Oak, Humble, TX
+Joyce           5631 Rice, Houston, TX
+
+//Q3 For every project located in ‘Stafford’, list the project number, the controlling  
+department number, and the department manager’s last name, address, and birth 
+date
+
+select p.pname, p.pnumber, p.dnum, d.dname, e.lname, e.bdate,p.plocation
+from(project p join department d on dnum=dnumber)join employee e on mgr_ssn=ssn ;
+
+PNAME              PNUMBER       DNUM DNAME           LNAME           BDATE     PLOCATION
+--------------- ---------- ---------- --------------- --------------- --------- ---------------
+ProductX                 1          5 Research        Wong            08-DEC-65  Bellaire
+ProductY                 2          5 Research        Wong            08-DEC-65 Sugarland
+ProductZ                 3          5 Research        Wong            08-DEC-65 Houston
+Computerization         10          4 Administration  Wallace         20-JUN-41 Stafford
+Reorganization          20          1 Headquarters    Borg            10-NOV-37 Houston
+Newbenefits             30          4 Administration  Wallace         20-JUN-41 Starfford
+
+6 rows selected.
+
+select p.pname, p.pnumber, p.dnum, d.dname, e.lname, e.bdate,p.plocation
+from(project p join department d on dnum=dnumber)join employee e on mgr_ssn=ssn
+where p.plocation='stafford' ;
+
+PNAME              PNUMBER       DNUM DNAME           LNAME           BDATE     PLOCATION
+--------------- ---------- ---------- --------------- --------------- --------- ---------------
+Computerization         10          4 Administration  Wallace         20-JUN-41 Stafford
+
+
+
+//Q4For each employee, retrieve the employee’s first and last name and the first and 
+last name of his or her immediate supervisor.
+
+
+select e.fname, e.lname, s.fname SuperVisorfname, s.lname as SuperVisorlname
+from(employee e left join employee s on e.super_ssn= s.ssn);
+
+FNAME           LNAME           SUPERVISORFNAME SUPERVISORLNAME
+--------------- --------------- --------------- ---------------
+Richard         Marini          Richard         Marini
+Joyce           English         Franklin        Wong
+Ramesh          Narayan         Franklin        Wong
+John            Smith           Franklin        Wong
+Ahmad           Jabbar          Jennifer        Wallace
+Alicia          Zelaya          Jennifer        Wallace
+Jennifer        Wallace         James           Borg
+Franklin        Wong            James           Borg
+James           Borg
+
+9 rows selected.
+
+
+

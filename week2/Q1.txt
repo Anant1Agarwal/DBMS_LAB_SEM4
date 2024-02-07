@@ -3,7 +3,9 @@ create table Employee(EmpNo numeric(3) Primary key,
 			Gender varchar(1) NOT NULL,
 			Salary numeric(10) NOT NULL,
 			Address varchar(30) NOT NULL ,
-			DNo numeric(4) NOT NULL);
+			DNo numeric(4) NOT NULL,
+			constraint gendercheck check(Gender in ('M','F'))
+);
 
 Alter table Employee 
 Modify Gender constraint gendercheck check(Gender in ('M', 'F'));

@@ -11,7 +11,7 @@ Time-slot (time_slot_id, day, start_time, end_time)
 Prereq (course_id, prereq_id)
 
 
-//Q11. Find the number of students in each course.
+//Q1. Find the number of students in each course.
 select count(id), c.title
 from takes t, course c
 where t.course_id=c.course_id
@@ -186,11 +186,40 @@ Elec. Eng.                80000
 
 7 rows selected.
 
+nhi chal raha
+with tot_dept_sal(dept_name, max_sal) as
+(select dept_name, max(salary) max_sal
+from instructor 
+group by dept_name)
+select dept_name, max(max_sal)
+from tot_dept_sal,department
+where;
+
+
+with max_sal(value) as
+ (select max(salary)
+ from instructor)
+select dept_name, value
+from max_sal, instructor i
+where i.salary=max_sal.value;
+
+DEPT_NAME                 VALUE
+-------------------- ----------
+Physics                   95000
+
+
 //Q9Find the average instructors’ salaries of those departments where the average 
 salary is greater than 42000.
 
 select dept_name,avg(salary) As Avg_salary
 from instructor
-group by dept_name 
+group by dept
+_name 
 having avg(salary)>=42000;
 
+
+
+select dept_name, (select count(*) 
+		   from instructor i 
+		   where i.dept_name=d.dept_name)
+from department d;

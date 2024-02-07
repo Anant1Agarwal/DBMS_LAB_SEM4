@@ -103,6 +103,16 @@ from instructor i
 where i.ID NOT IN (select id
 		   from teaches);
 
+select i.ID,i.name
+from instructor i
+where NOT EXISTS (select *
+		   from teaches t
+		 where t.id=i.id);
+
+
+
+
+
 ID    NAME
 ----- --------------------
 76543 Singh
@@ -118,49 +128,359 @@ from student s,course c,section sc,takes t
 where s.id=t.id and c.course_id=t.course_id and sc.sec_id=t.sec_id and  t.course_id=sc.course_id and sc.room_number=101;
 
 
-select *
+select s.name, c.title, t.year
 from student s,course c,section sc,takes t
 where s.id=t.id and sc.room_number=101 and t.course_id=c.course_id and sc.course_id=c.course_id and t.year=sc.year;
 
+NAME                 TITLE                                                    YEAR
+-------------------- -------------------------------------------------- ----------
+Zhang                Intro. to Computer Science                               2009
+Shankar              Intro. to Computer Science                               2009
+Chavez               Investment Banking                                       2010
+Levy                 Intro. to Computer Science                               2009
+Levy                 Intro. to Computer Science                               2010
+Williams             Intro. to Computer Science                               2009
+Sanchez              Music Video Production                                   2010
+Brown                Intro. to Computer Science                               2009
+Bourikas             Intro. to Computer Science                               2009
 
-//Q16. For all students who have opted courses in 2015, find their names and course id’s 
+9 rows selected.
+
+
+
+//Q16. For all students who have opted courses in 2009, find their names and course id’s 
 with the attribute course title replaced by c-name.
+
+select s.name, c.title as c_name 
+from course c, student s, takes t
+where c.course_id=t.course_id and t.id=s.id and t.year=2009;
+
+NAME                 C_NAME
+-------------------- --------------------------------------------------
+Zhang                Intro. to Computer Science
+Zhang                Database System Concepts
+Shankar              Intro. to Computer Science
+Shankar              Game Design
+Shankar              Database System Concepts
+Peltier              Physical Principles
+Levy                 Intro. to Computer Science
+Williams             Intro. to Computer Science
+Williams             Game Design
+Brown                Intro. to Computer Science
+Aoi                  Intro. to Digital Systems
+
+NAME                 C_NAME
+-------------------- --------------------------------------------------
+Bourikas             Intro. to Computer Science
+Tanaka               Intro. to Biology
+
+13 rows selected.
 
 
 //Q17. Find the names of all instructors whose salary is greater than the salary of at least 
 one instructor of CSE department and salary replaced by inst-salary.
-String Operations (Use %, _, LIKE):
+
+select name, salary as Inst_salary
+from instructor
+where salary> some(select salary
+		from instructor
+		where dept_name='Comp. Sci.');
+
+select distinct(i1.name),i1.salary as inst_salary
+from instructor i1, instructor i2
+where i1.salary>i2.salary and i2.dept_name='Comp. Sci.';
+
+NAME                 INST_SALARY
+-------------------- -----------
+Einstein                   95000
+Brandt                     92000
+Wu                         90000
+Gold                       87000
+Kim                        80000
+Singh                      80000
+Katz                       75000
+Crick                      72000
+
+8 rows selected.
+
 
 
 //Q18. Find the names of all instructors whose department name includes the substring 
-‘ch’. 
-Built-in Functions:
+‘si’. 
+
+select name, dept_name
+from instructor i
+where i.dept_name like '%si%';
+
+NAME                 DEPT_NAME
+-------------------- --------------------
+Mozart               Music
+Einstein             Physics
+Gold                 Physics
 
 
 //Q19. List the student names along with the length of the student names.
+
+select s.name, length(s.name) as name_length
+from student s;
+
+NAME                 NAME_LENGTH
+-------------------- -----------
+Zhang                          5
+Shankar                        7
+Brandt                         6
+Chavez                         6
+Peltier                        7
+Levy                           4
+Williams                       8
+Sanchez                        7
+Snow                           4
+Brown                          5
+Aoi                            3
+
+NAME                 NAME_LENGTH
+-------------------- -----------
+Bourikas                       8
+Tanaka                         6
+
+13 rows selected.
+
 
 
 
 //Q20. List the department names and 3 characters from 3rd position of each department name
 
+select d.dept_name, SUBSTR(d.dept_name, 3,3)
+from department d;
 
+DEPT_NAME            SUBSTR(D.DEP
+-------------------- ------------
+Biology              olo
+Comp. Sci.           mp.
+Elec. Eng.           ec.
+Finance              nan
+History              sto
+Music                sic
+Physics              ysi
+
+7 rows selected.
 
 //Q21. List the instructor names in upper case.
 
+select UPPER(i.name)
+from instructor i;
+
+UPPER(I.NAME)
+--------------------
+SRINIVASAN
+WU
+MOZART
+EINSTEIN
+EL SAID
+GOLD
+KATZ
+CALIFIERI
+SINGH
+CRICK
+BRANDT
+
+UPPER(I.NAME)
+--------------------
+KIM
+
+12 rows selected.
 
 //Q22. Replace NULL with value1(say 0) for a column in any of the table 
+//no null values present
+
+select i.name,NVL(i.salary,0)
+from instructor i;
+
+NAME                 NVL(I.SALARY,0)
+-------------------- ---------------
+Srinivasan                     65000
+Wu                             90000
+Mozart                         40000
+Einstein                       95000
+El Said                        60000
+Gold                           87000
+Katz                           75000
+Califieri                      62000
+Singh                          80000
+Crick                          72000
+Brandt                         92000
+
+NAME                 NVL(I.SALARY,0)
+-------------------- ---------------
+Kim                            80000
+
+12 rows selected.
+
 
 
 //Q23. Display the salary and salary/3 rounded to nearest hundred from Instructor.
+
+
+select i.name, salary,Round(salary/3,2)
+from instructor i;
+
+NAME                     SALARY ROUND(SALARY/3,2)
+-------------------- ---------- -----------------
+Srinivasan                65000          21666.67
+Wu                        90000             30000
+Mozart                    40000          13333.33
+Einstein                  95000          31666.67
+El Said                   60000             20000
+Gold                      87000             29000
+Katz                      75000             25000
+Califieri                 62000          20666.67
+Singh                     80000          26666.67
+Crick                     72000             24000
+Brandt                    92000          30666.67
+
+NAME                     SALARY ROUND(SALARY/3,2)
+-------------------- ---------- -----------------
+Kim                       80000          26666.67
+
+12 rows selected.
+
+
+
 Add date of birth column (DOB) to Employee Table. Insert appropriate DOB values 
 for different employees and try the exercise problems given below:
+
+
+alter table employee
+add DOB DATE Default(TO_DATE('1990-01-23','YYYY-MM-DD'));
+
+update employee
+set DOB=TO_DATE('2003-04-07','YYYY-MM-DD') 
+where EMPNO=100;
+
+
+select empname, TO_CHAR(DOB,'DD-MON-YYYY') dob
+from employee;
+EMPNAME                        DOB
+------------------------------ --------------------
+Anant Agarwal                  07-APR-2003
+Robert                         23-JAN-1990
+Rebecca                        23-JAN-1990
+Utsav goyal                    23-JAN-1990
+
+
+
+select empname, TO_CHAR(DOB,'DD-MM-YY') dob
+from employee;
+
+EMPNAME                        DOB
+------------------------------ --------
+Anant Agarwal                  07-04-03
+Robert                         23-01-90
+Rebecca                        23-01-90
+Utsav goyal                    23-01-90
+
+
+select empname, TO_CHAR(DOB,'YEAR') dob
+from employee;
+EMPNAME                        DOB
+------------------------------ ------------------------------------------
+Anant Agarwal                  TWO THOUSAND THREE
+Robert                         NINETEEN NINETY
+Rebecca                        NINETEEN NINETY
+Utsav goyal                    NINETEEN NINETY
+
+select empname, TO_CHAR(DOB,'Year') dob
+from employee;
+EMPNAME                        DOB
+------------------------------ ------------------------------------------
+Anant Agarwal                  Two Thousand Three
+Robert                         Nineteen Ninety
+Rebecca                        Nineteen Ninety
+Utsav goyal                    Nineteen Ninety
+
+
+select empname, TO_CHAR(DOB,'year') dob
+from employee;
+EMPNAME                        DOB
+------------------------------ ------------------------------------------
+Anant Agarwal                  two thousand three
+Robert                         nineteen ninety
+Rebecca                        nineteen ninety
+Utsav goyal                    nineteen ninety
+
 
 
 //Q24. Display the birth date of all the employees in the following format:
  ‘DD-MON-YYYY’
  ‘DD-MON-YY’
  ‘DD-MM-YY’
+
 25. List the employee names and the year (fully spelled out) in which they are born
  ‘YEAR’
  ‘Year’
  ‘year’
+
+
+
+
+
+ADDITIONAL QUESTIONS
+//Q7
+select i.name, c.title
+from instructor i, teaches t, course c
+where i.id=t.id and c.course_id=t.course_id;
+
+NAME                 TITLE
+-------------------- --------------------------------------------------
+Crick                Intro. to Biology
+Crick                Genetics
+Srinivasan           Intro. to Computer Science
+Katz                 Intro. to Computer Science
+Brandt               Game Design
+Brandt               Game Design
+Srinivasan           Robotics
+Katz                 Image Processing
+Brandt               Image Processing
+Srinivasan           Database System Concepts
+Kim                  Intro. to Digital Systems
+
+NAME                 TITLE
+-------------------- --------------------------------------------------
+Wu                   Investment Banking
+El Said              World History
+Mozart               Music Video Production
+Einstein             Physical Principles
+
+15 rows selected.
+
+//Q8
+with count_num(id, val)as
+(select id, count(course_id)
+from takes
+group by id)
+select s.name,s.dept_name, a.I_ID, cn.val
+from student s, advisor a,count_num cn
+where cn.id=s.id and s.id=a.s_id;
+
+NAME                 DEPT_NAME            I_ID         VAL
+-------------------- -------------------- ----- ----------
+Zhang                Comp. Sci.           45565          2
+Shankar              Comp. Sci.           10101          4
+Chavez               Finance              76543          1
+Peltier              Physics              22222          1
+Levy                 Physics              22222          3
+Brown                Comp. Sci.           45565          2
+Aoi                  Elec. Eng.           98345          1
+Bourikas             Elec. Eng.           98345          2
+Tanaka               Biology              76766          2
+
+9 rows selected.
+
+
+
+
+
+
+
+
+

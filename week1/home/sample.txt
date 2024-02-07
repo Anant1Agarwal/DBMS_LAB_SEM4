@@ -1,0 +1,39 @@
+CREATE TABLE Account(ACC_NUM number(10) primary key,
+			branch_name varchar(10) references branch(optional key can be 			provided)
+CREATE TABLE BORROWER
+ (CUSTOMER_NAME VARCHAR(2) REFERENCES CUSTOMER,
+ LOAN_NUMBER NUMBER(10) REFERENCES LOAN,
+ PRIMARY KEY(CUSTOMER_NAME,LOAN_NUMBER));
+
+insert into Account(acc_num, branch_name) values(13324,bij);
+
+
+alter table account add (mynewcol number(10));
+alter table account drop column ACC_NUM;
+alter table account modify (acc_nUM(3));
+
+Rename account to accounts;
+
+
+ fast and efficient way to delete all the rows from a table in SQL.
+truncating
+
+trunc table accounts;
+
+drop table accounts;
+
+select * from account;
+
+select acc_num, branch_name from account
+
+select stu_name as name 
+from student
+
+
+delete from student where reg_no=102;
+
+delete from student;
+
+update student set stu_lname='Agarwal';
+
+update student set stu_fname='sumi' where stu_lname='mittal';

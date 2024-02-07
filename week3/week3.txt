@@ -1,0 +1,215 @@
+Student (ID, name,dept_name, tot_cred)
+Instructor(ID, name, dept_name, salary)
+Course (Course_id, title,dept_name, credits)
+Takes (ID, course_id, sec_id, semester, year, grade)
+Classroom (building, room_number, capacity)
+Department (dept_name, building, budget)
+Section (course_id, section_id, semester, year, building, room_number, time_slot_id)
+Teaches (id, course_id, section_id, semester, year)
+Advisor(s_id, i_id)
+Time-slot (time_slot_id, day, start_time, end_time)
+Prereq (course_id, prereq_id)
+
+
+
+//Q1
+(select c.course_id, c.title, sc.semester,sc.year
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009)
+UNION 
+(select c.course_id,c.title, sc.semester,sc.year
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Spring' and sc.year=2010);
+
+TITLE                                              SEMEST       YEAR
+-------------------------------------------------- ------ ----------
+Intro. to Computer Science                         Fall         2009
+Database System Concepts                           Fall         2009
+Physical Principles                                Fall         2009
+Intro. to Computer Science                         Spring       2010
+Robotics                                           Spring       2010
+Image Processing                                   Spring       2010
+Investment Banking                                 Spring       2010
+World History                                      Spring       2010
+Music Video Production                             Spring       2010
+
+9 rows selected.
+
+
+(select c.course_id, c.title, sc.semester,sc.year
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009)
+UNION ALL
+(select c.course_id,c.title, sc.semester,sc.year
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Spring' and sc.year=2010);
+
+COURSE_I TITLE                                              SEMEST       YEAR
+-------- -------------------------------------------------- ------ ----------
+CS-101   Intro. to Computer Science                         Fall         2009
+CS-101   Intro. to Computer Science                         Spring       2010
+CS-315   Robotics                                           Spring       2010
+CS-319   Image Processing                                   Spring       2010
+CS-319   Image Processing                                   Spring       2010
+CS-347   Database System Concepts                           Fall         2009
+FIN-201  Investment Banking                                 Spring       2010
+HIS-351  World History                                      Spring       2010
+MU-199   Music Video Production                             Spring       2010
+PHY-101  Physical Principles                                Fall         2009
+
+10 rows selected.
+
+//Q2
+(select c.title
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009)
+INTERSECT
+(select c.title
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Spring' and sc.year=2010);
+TITLE
+--------------------------------------------------
+Intro. to Computer Science
+
+
+(select c.course_id, c.title
+from course c, section sc
+where (c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009))
+INTERSECT
+(select c1.course_id,c1.title
+from course c1, section sc1
+where (c1.course_id=sc1.course_id and sc1.semester='Spring' and sc1.year=2010));
+
+TITLE                                              COURSE_I
+-------------------------------------------------- --------
+Intro. to Computer Science                         CS-101
+
+//Q3
+(Select c.title,c.course_id
+    from section sc, course c
+    where(sc.course_id=c.course_id and sc.semester='Fall' and sc.year=2009))
+    MINUS
+   (Select c1.title,c1.course_id
+    from section sc1, course c1
+    where(sc1.course_id=c1.course_id and sc1.semester='Spring' and sc1.year=2010));
+TITLE                                              COURSE_I
+-------------------------------------------------- --------
+Database System Concepts                           CS-347
+Physical Principles                                PHY-101
+
+//Q4
+select c.course_id, c.title
+from course c
+where not exists(select course_id
+		from takes t
+		where c.course_id=t.course_id);
+
+COURSE_I TITLE
+-------- --------------------------------------------------
+BIO-399  Computational Biology
+
+ 
+//Q5
+
+select c.title,c.course_id
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009
+and c.course_id in
+(select c1.course_id
+from course c1, section sc1
+where c1.course_id=sc1.course_id and sc1.semester='Spring' and sc1.year=2010);
+
+TITLE                                              COURSE_I
+-------------------------------------------------- --------
+Intro. to Computer Science                         CS-101
+
+
+//Q6
+select count(t.id)
+from takes t
+where t.course_id in  (select tchs.course_id
+		from instructor i, teaches tchs
+		where i.id=10101 and i.id=tchs.id );
+
+COUNT(T.ID)
+-----------
+         11
+
+
+//Q7
+select c.title,c.course_id
+from course c, section sc
+where c.course_id=sc.course_id and sc.semester='Fall' and sc.year=2009
+and c.course_id not in
+(select c1.course_id
+from course c1, section sc1
+where c1.course_id=sc1.course_id and sc1.semester='Spring' and sc1.year=2010);
+
+TITLE                                              COURSE_I
+-------------------------------------------------- --------
+Database System Concepts                           CS-347
+Physical Principles                                PHY-101
+
+
+//Q8
+select s.name
+from student s
+where s.name in (select name
+		from instructor);
+NAME
+--------------------
+Brandt
+
+
+//Q9
+select i.name, i.salary
+from instructor i
+where i.salary>some(select salary
+		    from instructor i2
+			where i2.dept_name='Biology');
+NAME                     SALARY
+-------------------- ----------
+Einstein                  95000
+Brandt                    92000
+Wu                        90000
+Gold                      87000
+Kim                       80000
+Singh                     80000
+Katz                      75000
+
+7 rows selected.
+
+//Q10
+select i.name, i.salary
+from instructor i
+where i.salary>all(select salary
+		    from instructor i2
+			where i2.dept_name='Biology');
+
+NAME                     SALARY
+-------------------- ----------
+Katz                      75000
+Singh                     80000
+Kim                       80000
+Gold                      87000
+Wu                        90000
+Brandt                    92000
+Einstein                  95000
+
+7 rows selected.
+
+//Q11
+select i.dept_name,avg(i.salary)
+from instructor i
+group by dept_name
+having avg(i.salary)>=all(select avg(salary)
+			 from instructor i2
+			group by dept_name);
+
+DEPT_NAME            AVG(I.SALARY)
+-------------------- -------------
+Physics                      91000
+
+//Q12
+
+

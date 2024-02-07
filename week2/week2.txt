@@ -1,0 +1,114 @@
+//Q1
+create table Employee(EmpNo numeric(3) Primary key,
+			EmpName varchar(30) NOT NULL, 
+			Gender varchar(1) NOT NULL,
+			Salary numeric(10) NOT NULL,
+			Address varchar(30) NOT NULL ,
+			DNo numeric(4) NOT NULL,
+			constraint gendercheck check(Gender in ('M','F'))
+);
+
+Alter table Employee 
+Modify Gender constraint gendercheck check(Gender in ('M', 'F'));
+Table created.
+
+
+//Q2
+CREATE TABLE Department2 (
+    DeptNo INT PRIMARY KEY,
+    DeptName VARCHAR(255) UNIQUE NOT NULL
+);
+
+Table created.
+
+
+//Q3
+alter table Employee 
+add constraint fk_employee_dept
+FOREIGN Key(Dno) references Department2(DeptNo);
+Table altered.
+
+//Q4
+insert into Department2 values(783, 'Tech');
+insert into Department2 values(432, 'IT');
+insert into Department2 values(84, 'Security');
+insert into employee values(100, 'Anant Agarwal','M', 7777777,'Seattle', 783);
+insert into employee values(101, 'Robert','M', 27242,'Seattle', 432);
+insert into employee values(102, 'Rebecca','F', 77777,'Seattle', 84);
+insert into employee values(105, 'Utsav goyal','M',150,'Seattle', 783);
+
+    DEPTNO DEPTNAME
+---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       783 Tech
+       432 IT
+        84 Security
+
+
+     EMPNO EMPNAME                        G     SALARY ADDRESS                               DNO
+---------- ------------------------------ - ---------- ------------------------------ ----------
+       100 Anant Agarwal                  M    7777777 Seattle                               783
+       101 Robert                         M      27242 Seattle                               432
+       102 Rebecca                        F      77777 Seattle                                84
+       105 Utsav goyal                    M        150 Seattle                               783
+
+
+//Q5
+insert into employee values(100, 'nonu','M',120,'Seattle', 323);
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.SYS_C008356) violated
+
+insert into employee values(107, NULL,'M',120,'Seattle', 323)
+                                 *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."EMPLOYEE"."EMPNAME")
+
+
+insert into employee values(934, 'Ananya Agarwal','M', 7777777,'Seattle', 9374);
+ERROR at line 1:
+ORA-02291: integrity constraint (SYSTEM.FK_EMPLOYEE_DEPT) violated - parent key not found
+
+
+//Q6
+DELETE FROM department2 WHERE DeptNo=84;
+ERROR at line 1:
+ORA-02292: integrity constraint (SYSTEM.FK_EMPLOYEE_DEPT) violated - child record found
+
+
+//Q7
+
+alter table employee
+drop constraint fk_employee_dept;
+
+Table altered.
+
+alter table employee 
+add constraint fk_employee_dept
+foreign key(Dno) references Department2(DeptNo) 
+on delete cascade;
+
+Table altered.
+
+delete from department2 where deptNo=84;
+1 row deleted.
+
+
+
+     EMPNO EMPNAME                        G     SALARY ADDRESS                               DNO
+---------- ------------------------------ - ---------- ------------------------------ ----------
+       100 Anant Agarwal                  M    7777777 Seattle                               783
+       101 Robert                         M      27242 Seattle                               432
+       105 Utsav goyal                    M        150 Seattle                               783
+
+  DEPTNO DEPTNAME
+---------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       783 Tech
+       432 IT
+
+
+alter table employee
+add salary
+
+
+
+
+insert into employee values(111, 'Night goyal','M',150,'Seattle', 783);
