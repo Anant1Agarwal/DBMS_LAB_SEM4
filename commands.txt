@@ -5,3 +5,20 @@ set linesize 200;
  more chars means more columns;
 
 cl scr;
+
+//doesnt work
+to shutdown db to save RAM
+in cmd admin
+sqlplus "/as sysdba"
+
+shutdown immediate
+
+startup
+
+to shutdown
+open services
+stop oracleserviceXe 
+
+start oracleserviceXe
+
+
