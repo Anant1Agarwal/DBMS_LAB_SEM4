@@ -1,0 +1,272 @@
+show errors;
+
+set serveroutput on
+create or replace
+function count_book(bk_subject varchar)
+Return number as
+bk_count number
+ 
+
+
+begin
+select count(*)into bk_count
+from book
+WHERE subject=bk_subject
+
+
+return bk_count;
+
+End;
+/
+
+begin
+
+dbms_output.put_line('number of books is'|| count_book('&subject');
+End;
+/
+
+set serveroutput on
+create or replace
+procedure display_hello(nam varchar) is
+p1_name varchar(20);
+begin 
+//p1_name :=nam
+dbms_output.put_line('Hello '|| nam);
+end;
+/
+
+set serveroutput on
+declare
+begin
+display_hello('&name');
+end;
+/
+
+
+
+
+//q1
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+PROCEDURE Good_day IS 
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Good Day to YOU');
+end;
+/
+
+set serveroutput on
+declare
+begin
+Good_day;
+end;
+/
+
+
+//q2
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+PROCEDURE display_instructor_in_dept(dept varchar) IS
+pl_dept varchar(20);
+CURSOR c1 select * from instructor; 
+BEGIN
+pl_dept:=dept
+DBMS_OUTPUT.PUT_LINE('Instructor from department '|| pl_dept ||'are ' );
+FOR I IN C1
+LOOP 
+IF
+I.dept_name=pl_dept
+DBMS_OUTPUT_PUT_LINE(I.name)
+END IF;
+END LOOP
+END;
+/
+
+SET SERVEROUTPUT ON
+DECLARE
+pl_dep instructor.dept_name%TYPE;
+BEGIN 
+pl_dep:='&inputbuffer';
+display_instructor_in_dept(pl_dep);
+END;
+/
+
+
+
+//chalta h
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+PROCEDURE display_instructor_in_dept(dept varchar) IS
+pl_dept varchar(20);
+CURSOR c1 is select * from instructor ; 
+BEGIN
+pl_dept:=dept;
+DBMS_OUTPUT.PUT_LINE('Instructor from department '|| pl_dept ||'are ' );
+FOR I IN C1
+LOOP 
+IF I.dept_name=pl_dept THEN
+DBMS_OUTPUT.PUT_LINE(I.name);
+END IF;
+END LOOP;
+END;
+/
+
+SET SERVEROUTPUT ON
+DECLARE
+pl_dep instructor.dept_name%TYPE;
+BEGIN 
+pl_dep:='&inputbuffer';
+display_instructor_in_dept(pl_dep);
+END;
+/
+
+//Q3
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+PROCEDURE Course_popular(dept varchar) IS
+CURSOR t1 is select * from takes;
+CURSOR c1 is select * from course;
+counter NUMBER;
+MaxCount Number;
+pl_dept course.dept_name%TYPE;
+Course_Req course.course_id%TYPE;
+Course_Reqtitle course.title%TYPE;
+
+BEGIN
+pl_dept:=dept;
+Maxcount:=0;
+
+FOR courses1 IN c1
+LOOP
+	IF courses1.dept_name<>pl_dept
+	THEN CONTINUE;
+	END IF;
+counter:=0;
+FOR takes1 in t1
+	LOOP
+	IF takes1.course_id=courses1.course_id THEN
+	counter:=counter+1;
+		END IF;
+	END LOOP;
+IF Maxcount<counter THEN
+	MaxCount:=counter;
+	Course_Req:= courses1.course_id;
+	END IF;
+END LOOP;
+select title
+into Course_Reqtitle
+from course
+where course.course_id=course_req;
+DBMS_OUTPUT.PUT_LINE('MOST POPULAR course in ' || pl_dept|| ' is '|| Course_Reqtitle);
+END;
+/
+
+
+
+SET SERVEROUTPUT ON  -- calling
+DECLARE
+pl_dep instructor.dept_name%TYPE;
+BEGIN 
+pl_dep:='&inputbuffer';
+course_popular(pl_dep);
+END;
+/
+
+
+
+
+//Q4
+
+
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+PROCEDURE Course_popular(dept varchar) IS
+CURSOR s1 is select * from student;
+CURSOR c1 is select * from course;
+pl_dept course.dept_name%TYPE;
+
+BEGIN
+pl_dept:=dep;
+DBMS_OUTPUT.PUT_LINE("Student in " || pl_dept);
+
+FOR I in s1
+LOOP
+IF I.dept_name=pl_dept
+DBMS_OUTPUT.PUT_LINE(I.name);
+END IF;
+END LOOP;
+
+DBMS_OUTPUT.PUT_LINE("Courses offered in " || pl_dept);
+
+FOR I in c1
+LOOP
+IF c1.dept_name=pl_dept
+DBMS_OUTPUT.PUT_LINE(I.title);
+END IF;
+END LOOP;
+END;
+/
+
+//calling
+
+SET SERVEROUTPUT ON
+DECLARE
+pl_dep instructor.dept_name%TYPE;
+BEGIN 
+pl_dep:='&inputbuffer';
+course_popular(pl_dep);
+END;
+/
+
+
+
+//Q6
+SET SERVEROUTPUT ON
+CREATE OR REPLACE
+FUNCTION department_highest(dept varchar) IS
+CURSOR C1(deptn instructor.dept_name%type) is select * from instructor
+where dept_name=deptn
+Highest_salary number
+return instructor.name%type
+as reqInstrucName instructor.name%type
+
+BEGIN
+highest_salary:=0;
+
+For I in c1(dept)
+LOOP
+IF I.salary>highest_salary
+	highest_salary=I.salary
+	reqInstrucName=I.name
+END IF;
+END LOOP;
+
+return reqInstrucName
+END;
+/
+
+
+//calling
+SET SERVEROUTPUT ON
+DECLARE 
+CURSON D1 IS select * from department
+
+
+BEGIN
+FOR I IN D1
+LOOP
+DBMS_OUTPUT.PUT_LINE("MAX SALARY IN " ||I.dept_name ||"is taken by"||department_highest(i.name));
+END LOOP;
+
+
+END;
+/
+
+
+
+
+
+
+
+
+
+
